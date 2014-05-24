@@ -35,7 +35,7 @@ void loop()
         Serial.println();
     }
     // switch hi/low sense on signal
-    if (debounceBool(inSwitch, debounceTime, HIGH, debug)){
+    if (debounceBool(inSwitch, debounceTime, debug)){
         switchPins(pins, debug);
         // need a delay here to ensure we don't
         // hop back into debounce right away

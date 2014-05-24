@@ -3,8 +3,10 @@ template<class T> inline Print &operator <<(Print &obj, T arg) {
     obj.print(arg); return obj; 
 } 
 
-bool debounceBool(const int readPin, const int debounceTime, const int trueVal=HIGH, const bool debug=false) {
-  // adapted from http://arduino.cc/en/Tutorial/Debounce
+bool debounceBool(const int readPin, const int debounceTime, const bool debug=false) {
+    // adapted from http://arduino.cc/en/Tutorial/Debounce
+    // returns true if readpin stays HIGH for at least debounceTime
+    //
     // initialize button reading 
     // we will compare readings to initial state
     int initState = digitalRead(readPin);
@@ -22,19 +24,15 @@ bool debounceBool(const int readPin, const int debounceTime, const int trueVal=H
         (millis() - debounceTimer) < debounceTime
     ) {
         readState = digitalRead(readPin);
-        //Serial.println(readState);
-        // reset the timer on change, 
-        // update state
         if( initState != readState) {
+            // reset the timer on change, 
+            // update state
             debounceTimer = millis();
             initState = readState;
         }
     }
-    // need a delay here to ensure we don't 
-    // hop back in right away
-    // delay(debounceTime);
     // write output
-    if (readState == trueVal) {
+    if (readState == HIGH) {
         return true;
     } else { 
         return false;
