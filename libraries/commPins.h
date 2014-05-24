@@ -2,6 +2,7 @@
 struct commPins {
     int high;
     int low;
+    bool state;
 };
 
 // set voltage to high & low, resp
@@ -23,6 +24,8 @@ void switchPins( commPins &pins, const bool debug=false) {
     int tmpPin = pins.high;
     pins.high = pins.low;
     pins.low = tmpPin;
+    // configuration id
+    pins.state = !pins.state;
     // update voltage
     setPins(pins);
     if (debug) {
