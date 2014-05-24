@@ -1,7 +1,3 @@
-// Insertion style streaming to Serial
-template<class T> inline Print &operator <<(Print &obj, T arg) { 
-    obj.print(arg); return obj; 
-} 
 // Rx/Tx digital pins
 struct commPins {
     int high;
@@ -22,13 +18,15 @@ void openPins( const commPins pins ) {
     pinMode(pins.low, OUTPUT);
     setPins(pins);
 }
-void switchPins( commPins &pins ) {
+void switchPins( commPins &pins, const bool debug=false) {
     // switch hi/low sense
     int tmpPin = pins.high;
     pins.high = pins.low;
     pins.low = tmpPin;
     // update voltage
     setPins(pins);
-    Serial << "High=" << pins.high << ", Low=" << pins.low;
-    Serial.println();
+    if (debug) {
+        Serial << "High=" << pins.high << ", Low=" << pins.low;
+        Serial.println();
+    }
 }

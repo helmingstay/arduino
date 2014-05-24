@@ -1,10 +1,9 @@
-#include "helpers.h"
-#define LED_PIN 13
-const int delayTime = 1e3;
+const int debounceTime = 50;
 const int outLed = 5;
 const int inSwitch = 12;
 const int levelPin = A4;
-// Rx/Tx digital pins
+const bool debug = false;
+// digital output pin ids: HIGH/LOW (switchable)
 commPins pins = {0,1};
 int ledLevel = 0;
 int probeLevel = 0;
@@ -19,30 +18,27 @@ void setup()
     Serial.begin(9600);
 }
 
+#include "xian_helpers.h"
+#include "commPins.h"
+
 void loop()
 {
-    //lineRead = analogRead(A0);
-    // read pot and convert to TDW %level
+    // read sensor and convert to PWM %level
     probeLevel = analogRead(levelPin);
-    //Serial.println(probeLevel);
     ledLevel = map(probeLevel, 0, 1023, 0, 100);
-    Serial << probeLevel << ", " << ledLevel;
-    Serial.println();
+    // set led level accordingly
     analogWrite(outLed, ledLevel);
-    //int val = ;
-    if (digitalRead(inSwitch) != LOW) { 
-        //digitalWrite(outLed, HIGH);
-        //analogWrite(outLed, ledLevel);
-        switchPins(pins);
-        delay(delayTime);
-    } else {
-        //digitalWrite(outLed, LOW);
-        //analogWrite(outLed,0);
-        delay(delayTime);
+    // Print sensor reading to serial
+    //Serial.println(probeLevel);
+    if (debug) {
+        Serial << probeLevel << ", " << ledLevel;
+        Serial.println();
     }
-    /*
-        delay(500);
-        digitalWrite(outLed, LOW);
-        delay(5000);
-    */
+    // switch hi/low sense on signal
+    if (debounceBool(inSwitch, debounceTime, HIGH, debug)){
+        switchPins(pins, debug);
+        // need a delay here to ensure we don't
+        // hop back into debounce right away
+        delay(4*debounceTime);
+    }
 }
