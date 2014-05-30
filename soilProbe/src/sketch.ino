@@ -40,15 +40,10 @@ void loop()
         // delay(3*debounceTime);
     }
     // switch hi/low sense on signal
-    //if (debounceBool(inSwitch, debounceTime, debug)){
-        //delay(4*debounceTime);
-    if ( 
-        (probeLevel >= probeHigh + probeTol && pins.state) ||
-        (probeLevel <= probeLow - probeTol && !pins.state)
-    ){
-    //if ( ledLevel > 60 || ledLevel < 40) {
-        switchPins(pins, debug);
+    if (debounceBool(inSwitch, debounceTime, debug)){
         // need a delay here to ensure we don't
         // hop back into debounce right away
+        delay(4*debounceTime);
+        switchPins(pins, debug);
     }
 }
